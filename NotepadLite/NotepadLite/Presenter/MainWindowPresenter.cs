@@ -15,6 +15,7 @@ namespace NotepadLite.Presenter
         private static readonly string FileFilter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
 
         private readonly IMainWindow _view;
+        private DialogResult _dialogResult;
         private static string currentFile;
 
         public MainWindowPresenter(IMainWindow view)
@@ -31,6 +32,7 @@ namespace NotepadLite.Presenter
             _view.FileOpenEvent += OnFileOpenRequest;
             _view.FileSaveEvent += OnFileSaveRequest;
             _view.FileChangeEvent += OnFileChangeEvent;
+            _view.WindowClosingEvent += OnWindowCloseRequest;
         }
 
         private void OnFileChangeEvent(object sender, EventArgs e)
@@ -46,7 +48,7 @@ namespace NotepadLite.Presenter
         {
             try
             {
-                if (!await CanCreateOrOpenNewFile())
+                if (!await IsCurrentFileSaved())
                     return;
 
                 _view.EditorText = string.Empty;
@@ -62,7 +64,7 @@ namespace NotepadLite.Presenter
         {
             try
             {
-                if (!await CanCreateOrOpenNewFile())
+                if (!await IsCurrentFileSaved())
                     return;
 
                 using (var openFileDialog = new OpenFileDialog())
@@ -108,6 +110,21 @@ namespace NotepadLite.Presenter
                 {
                     await SaveFile(fileName);
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+            }
+        }
+
+        private async void OnWindowCloseRequest(object sender, EventArgs e)
+        {
+            try
+            {
+                var fileSaved = await IsCurrentFileSaved();
+                if (fileSaved || _dialogResult == DialogResult.No)
+                    _view.CloseWindow();
+
             }
             catch (Exception ex)
             {
@@ -161,7 +178,7 @@ namespace NotepadLite.Presenter
             }
         }
 
-        private async Task<bool> CanCreateOrOpenNewFile()
+        private async Task<bool> IsCurrentFileSaved()
         {
             if (string.IsNullOrWhiteSpace(_view.EditorText))
                 return true;
@@ -170,14 +187,14 @@ namespace NotepadLite.Presenter
                 return true;
 
             var message = "Do you want to save current file?";
-            var result = MessageBox.Show(message, "Warning",
+            _dialogResult = MessageBox.Show(message, "Warning",
                              MessageBoxButtons.YesNoCancel,
                              MessageBoxIcon.Warning);
 
-            if (result == DialogResult.Cancel)
+            if (_dialogResult == DialogResult.Cancel)
                 return false;
 
-            if (result == DialogResult.No)
+            if (_dialogResult == DialogResult.No)
                 return true;
 
             var fileName = GetFileNameToSave();

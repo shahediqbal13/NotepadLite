@@ -16,6 +16,7 @@ namespace NotepadLite
         public event EventHandler<EventArgs> FileOpenEvent;
         public event EventHandler<EventArgs> FileSaveEvent;
         public event EventHandler<EventArgs> FileChangeEvent;
+        public event EventHandler<EventArgs> WindowClosingEvent;
 
         public MainWindow()
         {
@@ -69,6 +70,18 @@ namespace NotepadLite
         {
             IsFileModified = true;
             FileChangeEvent?.Invoke(this, e);
+        }
+
+        private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            WindowClosingEvent?.Invoke(this, e);
+        }
+
+        public void CloseWindow()
+        {
+            Closing -= OnWindowClosing;
+            Application.Current.Shutdown();
         }
     }
 }
