@@ -3,6 +3,7 @@ using NotepadLite.View;
 using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace NotepadLite.Presenter
 {
@@ -23,7 +24,7 @@ namespace NotepadLite.Presenter
             _view.FileOpenEvent += OnFileOpenRequest;
         }
 
-        private void OnFileOpenRequest(object sender, EventArgs e)
+        private async void OnFileOpenRequest(object sender, EventArgs e)
         {
             try
             {
@@ -35,10 +36,13 @@ namespace NotepadLite.Presenter
 
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
+                        Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+
                         var fileStream = openFileDialog.OpenFile();
                         using (var reader = new StreamReader(fileStream))
                         {
-                            _view.SetTextToEditor(reader.ReadToEnd());
+                            var content = await reader.ReadToEndAsync();
+                            _view.SetTextToEditor(content);
                         }
                     }
                 }
@@ -46,6 +50,10 @@ namespace NotepadLite.Presenter
             catch (Exception ex)
             {
                 Log.Error(ex);
+            }
+            finally
+            {
+                Mouse.OverrideCursor = null;
             }
         }
     }
