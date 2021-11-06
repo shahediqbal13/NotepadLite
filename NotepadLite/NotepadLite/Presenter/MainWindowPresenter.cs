@@ -14,6 +14,7 @@ namespace NotepadLite.Presenter
         private static readonly string FileFilter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
 
         private readonly IMainWindow _view;
+        private static string currentFile;
 
         public MainWindowPresenter(IMainWindow view)
         {
@@ -40,6 +41,7 @@ namespace NotepadLite.Presenter
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
                         ViewUtil.ShowWaitCursor(true);
+                        currentFile = openFileDialog.FileName;
 
                         var fileStream = openFileDialog.OpenFile();
                         using (var reader = new StreamReader(fileStream))
@@ -69,17 +71,13 @@ namespace NotepadLite.Presenter
                     return;
                 }
 
-                var saveFileDialog = new SaveFileDialog
-                {
-                    Filter = FileFilter,
-                    Title = "Save File"
-                };
-                saveFileDialog.ShowDialog();
+                var fileName = GetFileNameToSave();
 
-                if (saveFileDialog.FileName != "")
+                if (!string.IsNullOrEmpty(fileName))
                 {
-                    using (var sw = new StreamWriter(saveFileDialog.FileName))
+                    using (var sw = new StreamWriter(fileName))
                     {
+                        ViewUtil.ShowWaitCursor(true);
                         await sw.WriteAsync(_view.EditorText);
                     }
                 }
@@ -87,6 +85,34 @@ namespace NotepadLite.Presenter
             catch (Exception ex)
             {
                 Log.Error(ex);
+            }
+            finally
+            {
+                ViewUtil.ShowWaitCursor(false);
+            }
+        }
+
+        private string GetFileNameToSave()
+        {
+            try
+            {
+                if (!string.IsNullOrEmpty(currentFile))
+                    return currentFile;
+
+                var saveFileDialog = new SaveFileDialog
+                {
+                    Filter = FileFilter,
+                    Title = "Save File"
+                };
+                saveFileDialog.ShowDialog();
+
+                currentFile = saveFileDialog.FileName;
+                return currentFile;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+                return string.Empty;
             }
         }
     }
