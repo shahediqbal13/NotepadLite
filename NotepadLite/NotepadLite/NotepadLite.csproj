@@ -75,6 +75,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Presenter\MainWindowPresenter.cs" />
+    <Compile Include="View\IMainWindow.cs" />
     <Compile Include="View\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -111,9 +113,7 @@
     <Resource Include="Resources\Image\app-icon-192x192.ico" />
     <Resource Include="Resources\Image\app-icon-48x48.ico" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Presenter\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <AdditionalFiles Include="log4net.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
