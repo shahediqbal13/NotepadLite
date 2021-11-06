@@ -3,6 +3,7 @@ using NotepadLite.Util;
 using NotepadLite.View;
 using System;
 using System.IO;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NotepadLite.Presenter
@@ -24,8 +25,43 @@ namespace NotepadLite.Presenter
 
         private void Initialize()
         {
+            _view.NewFileEvent += OnNewFileCreateRequest;
             _view.FileOpenEvent += OnFileOpenRequest;
             _view.FileSaveEvent += OnFileSaveRequest;
+        }
+
+        private async void OnNewFileCreateRequest(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(_view.EditorText))
+                    return;
+
+                var message = "Do you want to save current file?";
+                var result = MessageBox.Show(message, "Warning",
+                                 MessageBoxButtons.YesNoCancel,
+                                 MessageBoxIcon.Warning);
+
+                if (result == DialogResult.Cancel)
+                    return;
+
+                if (result == DialogResult.No)
+                {
+                    _view.EditorText = string.Empty;
+                    return;
+                }
+
+                var fileName = GetFileNameToSave();
+                if (!string.IsNullOrEmpty(fileName))
+                {
+                    await SaveFile(fileName);
+                    _view.EditorText = string.Empty;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+            }
         }
 
         private async void OnFileOpenRequest(object sender, EventArgs e)
@@ -66,20 +102,31 @@ namespace NotepadLite.Presenter
         {
             try
             {
-                if (string.IsNullOrEmpty(_view.EditorText))
+                if (string.IsNullOrWhiteSpace(_view.EditorText))
                 {
                     return;
                 }
 
                 var fileName = GetFileNameToSave();
-
                 if (!string.IsNullOrEmpty(fileName))
                 {
-                    using (var sw = new StreamWriter(fileName))
-                    {
-                        ViewUtil.ShowWaitCursor(true);
-                        await sw.WriteAsync(_view.EditorText);
-                    }
+                    await SaveFile(fileName);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+            }
+        }
+
+        private async Task SaveFile(string fileName)
+        {
+            try
+            {
+                using (var sw = new StreamWriter(fileName))
+                {
+                    ViewUtil.ShowWaitCursor(true);
+                    await sw.WriteAsync(_view.EditorText);
                 }
             }
             catch (Exception ex)

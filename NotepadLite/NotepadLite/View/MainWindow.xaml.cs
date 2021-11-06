@@ -18,7 +18,6 @@ namespace NotepadLite
         public MainWindow()
         {
             InitializeComponent();
-
             new MainWindowPresenter(this);
         }
 
@@ -34,14 +33,14 @@ namespace NotepadLite
             }
         }
 
-        private void OnNewMenuClicked(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("New");
-        }
-
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = true;
+        }
+
+        private void OnNewMenuClicked(object sender, RoutedEventArgs e)
+        {
+            NewFileEvent?.Invoke(this, e);
         }
 
         private void OnOpenMenuClicked(object sender, ExecutedRoutedEventArgs e)
