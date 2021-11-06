@@ -8,6 +8,6 @@ namespace NotepadLite.View
         event EventHandler<EventArgs> FileOpenEvent;
         event EventHandler<EventArgs> FileSaveEvent;
 
-        void SetTextToEditor(string text);
+        string EditorText { get; set; }
     }
 }

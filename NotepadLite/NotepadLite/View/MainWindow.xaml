@@ -9,6 +9,7 @@
     <Window.CommandBindings>
         <CommandBinding Command="New"  Executed="OnNewMenuClicked" CanExecute="CommandBinding_CanExecute" />
         <CommandBinding Command="Open"  Executed="OnOpenMenuClicked" CanExecute="CommandBinding_CanExecute" />
+        <CommandBinding Command="Save"  Executed="OnSaveMenuClicked" CanExecute="CommandBinding_CanExecute" />
     </Window.CommandBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -39,11 +40,11 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
-
-        <!--<TextBox AcceptsReturn="True" />-->
+        
         <avalonEdit:TextEditor
             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
             Name="textEditor"
             ShowLineNumbers="True" FontSize="10pt"/>
+        
     </DockPanel>
 </Window>

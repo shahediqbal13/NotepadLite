@@ -22,9 +22,16 @@ namespace NotepadLite
             new MainWindowPresenter(this);
         }
 
-        public void SetTextToEditor(string text)
+        public string EditorText
         {
-            textEditor.Text = text;
+            get
+            {
+                return textEditor.Text;
+            }
+            set
+            {
+                textEditor.Text = value;
+            }
         }
 
         private void OnNewMenuClicked(object sender, RoutedEventArgs e)
@@ -40,6 +47,11 @@ namespace NotepadLite
         private void OnOpenMenuClicked(object sender, ExecutedRoutedEventArgs e)
         {
             FileOpenEvent?.Invoke(this, e);
+        }
+
+        private void OnSaveMenuClicked(object sender, ExecutedRoutedEventArgs e)
+        {
+            FileSaveEvent?.Invoke(this, e);
         }
 
         private void OnWindowContentRendered(object sender, EventArgs e)

@@ -1,9 +1,9 @@
 ﻿using log4net;
+using NotepadLite.Util;
 using NotepadLite.View;
 using System;
 using System.IO;
 using System.Windows.Forms;
-using System.Windows.Input;
 
 namespace NotepadLite.Presenter
 {
@@ -11,7 +11,9 @@ namespace NotepadLite.Presenter
     {
         private static readonly ILog Log = LogManager.GetLogger(typeof(MainWindowPresenter));
 
-        private IMainWindow _view;
+        private static readonly string FileFilter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+
+        private readonly IMainWindow _view;
 
         public MainWindowPresenter(IMainWindow view)
         {
@@ -22,6 +24,7 @@ namespace NotepadLite.Presenter
         private void Initialize()
         {
             _view.FileOpenEvent += OnFileOpenRequest;
+            _view.FileSaveEvent += OnFileSaveRequest;
         }
 
         private async void OnFileOpenRequest(object sender, EventArgs e)
@@ -30,19 +33,19 @@ namespace NotepadLite.Presenter
             {
                 using (var openFileDialog = new OpenFileDialog())
                 {
-                    openFileDialog.Filter = "txt files (*.txt)|*.txt|All files (*.*)|*.*";
+                    openFileDialog.Filter = FileFilter;
                     openFileDialog.FilterIndex = 1;
                     openFileDialog.RestoreDirectory = true;
 
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        Mouse.OverrideCursor = System.Windows.Input.Cursors.Wait;
+                        ViewUtil.ShowWaitCursor(true);
 
                         var fileStream = openFileDialog.OpenFile();
                         using (var reader = new StreamReader(fileStream))
                         {
                             var content = await reader.ReadToEndAsync();
-                            _view.SetTextToEditor(content);
+                            _view.EditorText = content;
                         }
                     }
                 }
@@ -53,7 +56,37 @@ namespace NotepadLite.Presenter
             }
             finally
             {
-                Mouse.OverrideCursor = null;
+                ViewUtil.ShowWaitCursor(false);
+            }
+        }
+
+        private async void OnFileSaveRequest(object sender, EventArgs e)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(_view.EditorText))
+                {
+                    return;
+                }
+
+                var saveFileDialog = new SaveFileDialog
+                {
+                    Filter = FileFilter,
+                    Title = "Save File"
+                };
+                saveFileDialog.ShowDialog();
+
+                if (saveFileDialog.FileName != "")
+                {
+                    using (var sw = new StreamWriter(saveFileDialog.FileName))
+                    {
+                        await sw.WriteAsync(_view.EditorText);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
             }
         }
     }
