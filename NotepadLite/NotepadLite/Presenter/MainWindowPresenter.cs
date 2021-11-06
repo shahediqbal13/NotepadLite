@@ -34,29 +34,37 @@ namespace NotepadLite.Presenter
         {
             try
             {
-                if (string.IsNullOrWhiteSpace(_view.EditorText))
+                if (!await CanCreateOrOpenNewFile())
                     return;
 
-                var message = "Do you want to save current file?";
-                var result = MessageBox.Show(message, "Warning",
-                                 MessageBoxButtons.YesNoCancel,
-                                 MessageBoxIcon.Warning);
+                _view.EditorText = string.Empty;
 
-                if (result == DialogResult.Cancel)
-                    return;
+                //if (!_view.IsFileModified)
+                //{
+                //    _view.EditorText = string.Empty;
+                //    return;
+                //}
 
-                if (result == DialogResult.No)
-                {
-                    _view.EditorText = string.Empty;
-                    return;
-                }
+                //var message = "Do you want to save current file?";
+                //var result = MessageBox.Show(message, "Warning",
+                //                 MessageBoxButtons.YesNoCancel,
+                //                 MessageBoxIcon.Warning);
 
-                var fileName = GetFileNameToSave();
-                if (!string.IsNullOrEmpty(fileName))
-                {
-                    await SaveFile(fileName);
-                    _view.EditorText = string.Empty;
-                }
+                //if (result == DialogResult.Cancel)
+                //    return;
+
+                //if (result == DialogResult.No)
+                //{
+                //    _view.EditorText = string.Empty;
+                //    return;
+                //}
+
+                //var fileName = GetFileNameToSave();
+                //if (!string.IsNullOrEmpty(fileName))
+                //{
+                //    await SaveFile(fileName);
+                //    _view.EditorText = string.Empty;
+                //}
             }
             catch (Exception ex)
             {
@@ -68,6 +76,9 @@ namespace NotepadLite.Presenter
         {
             try
             {
+                if (!await CanCreateOrOpenNewFile())
+                    return;
+
                 using (var openFileDialog = new OpenFileDialog())
                 {
                     openFileDialog.Filter = FileFilter;
@@ -103,9 +114,7 @@ namespace NotepadLite.Presenter
             try
             {
                 if (string.IsNullOrWhiteSpace(_view.EditorText))
-                {
                     return;
-                }
 
                 var fileName = GetFileNameToSave();
                 if (!string.IsNullOrEmpty(fileName))
@@ -127,6 +136,7 @@ namespace NotepadLite.Presenter
                 {
                     ViewUtil.ShowWaitCursor(true);
                     await sw.WriteAsync(_view.EditorText);
+                    _view.IsFileModified = false;
                 }
             }
             catch (Exception ex)
@@ -161,6 +171,35 @@ namespace NotepadLite.Presenter
                 Log.Error(ex);
                 return string.Empty;
             }
+        }
+
+        private async Task<bool> CanCreateOrOpenNewFile()
+        {
+            if (string.IsNullOrWhiteSpace(_view.EditorText))
+                return true;
+
+            if (!_view.IsFileModified)
+                return true;
+
+            var message = "Do you want to save current file?";
+            var result = MessageBox.Show(message, "Warning",
+                             MessageBoxButtons.YesNoCancel,
+                             MessageBoxIcon.Warning);
+
+            if (result == DialogResult.Cancel)
+                return false;
+
+            if (result == DialogResult.No)
+                return true;
+
+            var fileName = GetFileNameToSave();
+            if (!string.IsNullOrEmpty(fileName))
+            {
+                await SaveFile(fileName);
+                return true;
+            }
+
+            return false;
         }
     }
 }

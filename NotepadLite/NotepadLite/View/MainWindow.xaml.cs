@@ -30,8 +30,11 @@ namespace NotepadLite
             set
             {
                 textEditor.Text = value;
+                IsFileModified = false;
             }
         }
+
+        public bool IsFileModified { get; set; }
 
         private void CommandBinding_CanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
@@ -56,6 +59,11 @@ namespace NotepadLite
         private void OnWindowContentRendered(object sender, EventArgs e)
         {
             textEditor.Focus();
+        }
+
+        private void OnTextChanged(object sender, EventArgs e)
+        {
+            IsFileModified = true;
         }
     }
 }

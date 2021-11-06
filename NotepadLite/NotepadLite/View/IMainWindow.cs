@@ -9,5 +9,6 @@ namespace NotepadLite.View
         event EventHandler<EventArgs> FileSaveEvent;
 
         string EditorText { get; set; }
+        bool IsFileModified { get; set; }
     }
 }
