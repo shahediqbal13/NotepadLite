@@ -26,11 +26,17 @@
             </MenuItem>
         </Menu>
 
-        <ToolBarTray DockPanel.Dock="Top">
+        <ToolBarTray DockPanel.Dock="Top" ToolBarTray.IsLocked="True">
             <ToolBar>
-                <Button Command="New" Content="New" />
-                <Button Command="Open" Content="Open" />
-                <Button Command="Save" Content="Save" />
+                <Button Command="New" ToolTip="New" >
+                    <Image Source="/NotepadLite;component/Resources/Image/Toolbar/toolbar-new.png" />
+                </Button>
+                <Button Command="Open" ToolTip="Open" >
+                    <Image Source="/NotepadLite;component/Resources/Image/Toolbar/toolbar-open.png" />
+                </Button>
+                <Button Command="Save" ToolTip="Save" >
+                    <Image Source="/NotepadLite;component/Resources/Image/Toolbar/toolbar-save.png" />
+                </Button>
             </ToolBar>
         </ToolBarTray>
 
