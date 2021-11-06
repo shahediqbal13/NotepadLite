@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31019.35
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NotepadLite", "NotepadLite\NotepadLite.csproj", "{B5F7DAB0-7C4C-455E-9B07-567F035FC619}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "NotepadLiteInstaller", "NotepadLiteInstaller\NotepadLiteInstaller.vdproj", "{30A4D224-D5C5-41A8-9BC1-E7AE71420FC2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B5F7DAB0-7C4C-455E-9B07-567F035FC619}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B5F7DAB0-7C4C-455E-9B07-567F035FC619}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B5F7DAB0-7C4C-455E-9B07-567F035FC619}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B5F7DAB0-7C4C-455E-9B07-567F035FC619}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30A4D224-D5C5-41A8-9BC1-E7AE71420FC2}.Debug|Any CPU.ActiveCfg = Debug
+		{30A4D224-D5C5-41A8-9BC1-E7AE71420FC2}.Release|Any CPU.ActiveCfg = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {5F7D6A78-6A21-4B5C-917D-263C2DDA88F6}
+	EndGlobalSection
+EndGlobal
