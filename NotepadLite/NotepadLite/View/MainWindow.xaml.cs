@@ -44,5 +44,10 @@ namespace NotepadLite
         {
 
         }
+
+        private void OnWindowContentRendered(object sender, EventArgs e)
+        {
+            textEditor.Focus();
+        }
     }
 }

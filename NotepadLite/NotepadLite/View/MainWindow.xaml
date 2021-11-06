@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:NotepadLite"
         mc:Ignorable="d"
-        Title="Notepad Lite" Height="450" Width="800" WindowStartupLocation="Manual" WindowState="Maximized" Icon="/NotepadLite;component/Resources/Image/app-icon-48x48.ico">
+        Title="Notepad Lite" Height="450" Width="800" WindowStartupLocation="Manual" WindowState="Maximized" Icon="/NotepadLite;component/Resources/Image/app-icon-48x48.ico" ContentRendered="OnWindowContentRendered">
     <Window.CommandBindings>
         <CommandBinding Command="New"  Executed="OnNewMenuClicked" CanExecute="CommandBinding_CanExecute" />
         <CommandBinding Command="Open"  Executed="OnOpenMenuClicked" CanExecute="CommandBinding_CanExecute" />
@@ -40,6 +40,10 @@
             </ToolBar>
         </ToolBarTray>
 
-        <TextBox AcceptsReturn="True" />
+        <!--<TextBox AcceptsReturn="True" />-->
+        <avalonEdit:TextEditor
+            xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+            Name="textEditor"
+            ShowLineNumbers="True" FontSize="10pt"/>
     </DockPanel>
 </Window>
