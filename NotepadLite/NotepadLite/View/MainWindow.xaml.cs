@@ -2,7 +2,6 @@
 using NotepadLite.View;
 using System;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace NotepadLite
@@ -59,6 +58,11 @@ namespace NotepadLite
         private void OnSaveMenuClicked(object sender, ExecutedRoutedEventArgs e)
         {
             FileSaveEvent?.Invoke(this, e);
+        }
+
+        private void OnExitMenuClicked(object sender, ExecutedRoutedEventArgs e)
+        {
+            WindowClosingEvent?.Invoke(this, e);
         }
 
         private void OnWindowContentRendered(object sender, EventArgs e)

@@ -3,13 +3,14 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:NotepadLite"
+        xmlns:command="clr-namespace:NotepadLite.Commands"
         mc:Ignorable="d"
         Title="Notepad Lite" Height="450" Width="800" WindowStartupLocation="Manual" WindowState="Maximized" Icon="/NotepadLite;component/Resources/Image/app-icon-48x48.ico" ContentRendered="OnWindowContentRendered" Closing="OnWindowClosing">
     <Window.CommandBindings>
         <CommandBinding Command="New"  Executed="OnNewMenuClicked" CanExecute="CommandBinding_CanExecute" />
         <CommandBinding Command="Open"  Executed="OnOpenMenuClicked" CanExecute="CommandBinding_CanExecute" />
         <CommandBinding Command="Save"  Executed="OnSaveMenuClicked" CanExecute="CommandBinding_CanExecute" />
+        <CommandBinding Command="command:CustomCommands.Exit"  Executed="OnExitMenuClicked" CanExecute="CommandBinding_CanExecute" />
     </Window.CommandBindings>
     <DockPanel>
         <Menu DockPanel.Dock="Top">
@@ -18,7 +19,7 @@
                 <MenuItem Command="Open" InputGestureText="Ctrl+O"/>
                 <MenuItem Command="Save" />
                 <Separator />
-                <MenuItem Header="_Exit" />
+                <MenuItem Command="command:CustomCommands.Exit" InputGestureText="Esc"/>
             </MenuItem>
             <MenuItem Header="_Edit">
                 <MenuItem Command="Cut" />
@@ -40,11 +41,11 @@
                 </Button>
             </ToolBar>
         </ToolBarTray>
-        
+
         <avalonEdit:TextEditor
             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
             Name="textEditor"
             ShowLineNumbers="True" FontSize="11pt" KeyDown="OnTextChanged"/>
-        
+
     </DockPanel>
 </Window>
