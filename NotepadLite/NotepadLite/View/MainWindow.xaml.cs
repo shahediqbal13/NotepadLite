@@ -2,6 +2,7 @@
 using NotepadLite.View;
 using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace NotepadLite
@@ -14,12 +15,15 @@ namespace NotepadLite
         public event EventHandler<EventArgs> NewFileEvent;
         public event EventHandler<EventArgs> FileOpenEvent;
         public event EventHandler<EventArgs> FileSaveEvent;
+        public event EventHandler<EventArgs> FileChangeEvent;
 
         public MainWindow()
         {
             InitializeComponent();
             new MainWindowPresenter(this);
         }
+
+        public string WindowTitle { set { Title = value; } }
 
         public string EditorText
         {
@@ -61,9 +65,10 @@ namespace NotepadLite
             textEditor.Focus();
         }
 
-        private void OnTextChanged(object sender, EventArgs e)
+        private void OnTextChanged(object sender, KeyEventArgs e)
         {
             IsFileModified = true;
+            FileChangeEvent?.Invoke(this, e);
         }
     }
 }

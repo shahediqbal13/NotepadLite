@@ -15,5 +15,10 @@ namespace NotepadLite.Util
                 Mouse.OverrideCursor = null;
             }
         }
+
+        public static string GetWindowTitle(string fileName = StringValues.UntitledFileName, string fileModifiedIcon = "")
+        {
+            return $"{fileModifiedIcon}{fileName} - Notepad Lite";
+        }
     }
 }

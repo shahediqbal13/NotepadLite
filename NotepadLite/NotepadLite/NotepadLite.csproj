@@ -76,6 +76,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Presenter\MainWindowPresenter.cs" />
+    <Compile Include="StringValues.cs" />
     <Compile Include="Util\ViewUtil.cs" />
     <Compile Include="View\IMainWindow.cs" />
     <Compile Include="View\MainWindow.xaml.cs">

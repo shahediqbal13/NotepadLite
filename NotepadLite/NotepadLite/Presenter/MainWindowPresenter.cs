@@ -25,9 +25,21 @@ namespace NotepadLite.Presenter
 
         private void Initialize()
         {
+            _view.WindowTitle = ViewUtil.GetWindowTitle();
+
             _view.NewFileEvent += OnNewFileCreateRequest;
             _view.FileOpenEvent += OnFileOpenRequest;
             _view.FileSaveEvent += OnFileSaveRequest;
+            _view.FileChangeEvent += OnFileChangeEvent;
+        }
+
+        private void OnFileChangeEvent(object sender, EventArgs e)
+        {
+            if (_view.IsFileModified)
+            {
+                var fileName = string.IsNullOrEmpty(currentFile) ? StringValues.UntitledFileName : currentFile;
+                _view.WindowTitle = ViewUtil.GetWindowTitle(fileName, "*");
+            }
         }
 
         private async void OnNewFileCreateRequest(object sender, EventArgs e)
@@ -38,33 +50,7 @@ namespace NotepadLite.Presenter
                     return;
 
                 _view.EditorText = string.Empty;
-
-                //if (!_view.IsFileModified)
-                //{
-                //    _view.EditorText = string.Empty;
-                //    return;
-                //}
-
-                //var message = "Do you want to save current file?";
-                //var result = MessageBox.Show(message, "Warning",
-                //                 MessageBoxButtons.YesNoCancel,
-                //                 MessageBoxIcon.Warning);
-
-                //if (result == DialogResult.Cancel)
-                //    return;
-
-                //if (result == DialogResult.No)
-                //{
-                //    _view.EditorText = string.Empty;
-                //    return;
-                //}
-
-                //var fileName = GetFileNameToSave();
-                //if (!string.IsNullOrEmpty(fileName))
-                //{
-                //    await SaveFile(fileName);
-                //    _view.EditorText = string.Empty;
-                //}
+                _view.WindowTitle = ViewUtil.GetWindowTitle();
             }
             catch (Exception ex)
             {
@@ -89,6 +75,7 @@ namespace NotepadLite.Presenter
                     {
                         ViewUtil.ShowWaitCursor(true);
                         currentFile = openFileDialog.FileName;
+                        _view.WindowTitle = ViewUtil.GetWindowTitle(currentFile);
 
                         var fileStream = openFileDialog.OpenFile();
                         using (var reader = new StreamReader(fileStream))
@@ -137,6 +124,7 @@ namespace NotepadLite.Presenter
                     ViewUtil.ShowWaitCursor(true);
                     await sw.WriteAsync(_view.EditorText);
                     _view.IsFileModified = false;
+                    _view.WindowTitle = ViewUtil.GetWindowTitle(fileName);
                 }
             }
             catch (Exception ex)
