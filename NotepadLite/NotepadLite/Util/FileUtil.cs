@@ -43,9 +43,9 @@ namespace NotepadLite.Util
                 if (string.IsNullOrWhiteSpace(fileName))
                     throw new ArgumentNullException("Invalid file path.");
 
-                using (var sw = new StreamWriter(fileName))
+                using (var writer = new StreamWriter(fileName))
                 {
-                    await sw.WriteAsync(text);
+                    await writer.WriteAsync(text);
                 }
             }
             catch (Exception ex)

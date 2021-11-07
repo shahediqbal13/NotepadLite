@@ -1,13 +1,7 @@
 ﻿using log4net;
 using NotepadLite.Presenter;
 using NotepadLite.Util;
-using NotepadLite.View;
 using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
 
 namespace NotepadLite
@@ -37,6 +31,7 @@ namespace NotepadLite
             catch (Exception ex)
             {
                 Log.Error(ex);
+                throw;
             }
         }
     }
