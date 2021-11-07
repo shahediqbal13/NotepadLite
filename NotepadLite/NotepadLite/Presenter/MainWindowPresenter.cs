@@ -51,6 +51,7 @@ namespace NotepadLite.Presenter
                     return;
 
                 _view.EditorText = string.Empty;
+                currentFile = string.Empty;
                 _view.WindowTitle = ViewUtil.GetWindowTitle();
             }
             catch (Exception ex)

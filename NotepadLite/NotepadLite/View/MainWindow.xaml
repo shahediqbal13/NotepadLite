@@ -45,7 +45,7 @@
         <avalonEdit:TextEditor
             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
             Name="textEditor"
-            ShowLineNumbers="True" FontSize="11pt" KeyDown="OnTextChanged"/>
+            ShowLineNumbers="True" FontSize="11pt" TextChanged="OnTextChanged"/>
 
     </DockPanel>
 </Window>

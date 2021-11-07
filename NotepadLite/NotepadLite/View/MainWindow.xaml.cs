@@ -1,5 +1,6 @@
 ﻿using NotepadLite.View;
 using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Input;
 
@@ -31,8 +32,9 @@ namespace NotepadLite
             }
             set
             {
+                textEditor.TextChanged -= OnTextChanged;
                 textEditor.Text = value;
-                IsFileModified = false;
+                textEditor.TextChanged += OnTextChanged;
             }
         }
 
@@ -68,13 +70,13 @@ namespace NotepadLite
             textEditor.Focus();
         }
 
-        private void OnTextChanged(object sender, KeyEventArgs e)
+        private void OnTextChanged(object sender, EventArgs e)
         {
             IsFileModified = true;
             FileModificationEvent?.Invoke(this, e);
         }
 
-        private void OnWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             e.Cancel = true;
             WindowClosingEvent?.Invoke(this, e);
