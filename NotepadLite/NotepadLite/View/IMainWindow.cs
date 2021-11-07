@@ -7,7 +7,7 @@ namespace NotepadLite.View
         event EventHandler<EventArgs> NewFileEvent;
         event EventHandler<EventArgs> FileOpenEvent;
         event EventHandler<EventArgs> FileSaveEvent;
-        event EventHandler<EventArgs> FileChangeEvent;
+        event EventHandler<EventArgs> FileModificationEvent;
         event EventHandler<EventArgs> WindowClosingEvent;
 
         string WindowTitle { set; }

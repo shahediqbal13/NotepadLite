@@ -2,7 +2,6 @@
 using NotepadLite.Util;
 using NotepadLite.View;
 using System;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -31,11 +30,11 @@ namespace NotepadLite.Presenter
             _view.NewFileEvent += OnNewFileCreateRequest;
             _view.FileOpenEvent += OnFileOpenRequest;
             _view.FileSaveEvent += OnFileSaveRequest;
-            _view.FileChangeEvent += OnFileChangeEvent;
+            _view.FileModificationEvent += OnFileModificationEvent;
             _view.WindowClosingEvent += OnWindowCloseRequest;
         }
 
-        private void OnFileChangeEvent(object sender, EventArgs e)
+        private void OnFileModificationEvent(object sender, EventArgs e)
         {
             if (_view.IsFileModified)
             {
@@ -75,26 +74,16 @@ namespace NotepadLite.Presenter
 
                     if (openFileDialog.ShowDialog() == DialogResult.OK)
                     {
-                        ViewUtil.ShowWaitCursor(true);
                         currentFile = openFileDialog.FileName;
                         _view.WindowTitle = ViewUtil.GetWindowTitle(currentFile);
 
-                        var fileStream = openFileDialog.OpenFile();
-                        using (var reader = new StreamReader(fileStream))
-                        {
-                            var content = await reader.ReadToEndAsync();
-                            _view.EditorText = content;
-                        }
+                        await ReadFileAndSetTextToEditor(openFileDialog.FileName);
                     }
                 }
             }
             catch (Exception ex)
             {
                 Log.Error(ex);
-            }
-            finally
-            {
-                ViewUtil.ShowWaitCursor(false);
             }
         }
 
@@ -132,17 +121,32 @@ namespace NotepadLite.Presenter
             }
         }
 
+        public async Task ReadFileAndSetTextToEditor(string fileName)
+        {
+            try
+            {
+                ViewUtil.ShowWaitCursor(true);
+                var content = await FileUtil.ReadFileAsync(fileName);
+                _view.EditorText = content;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex);
+            }
+            finally
+            {
+                ViewUtil.ShowWaitCursor(false);
+            }
+        }
+
         private async Task SaveFile(string fileName)
         {
             try
             {
-                using (var sw = new StreamWriter(fileName))
-                {
-                    ViewUtil.ShowWaitCursor(true);
-                    await sw.WriteAsync(_view.EditorText);
-                    _view.IsFileModified = false;
-                    _view.WindowTitle = ViewUtil.GetWindowTitle(fileName);
-                }
+                ViewUtil.ShowWaitCursor(true);
+                await FileUtil.WriteToFileAsync(fileName, _view.EditorText);
+                _view.IsFileModified = false;
+                _view.WindowTitle = ViewUtil.GetWindowTitle(fileName);
             }
             catch (Exception ex)
             {
